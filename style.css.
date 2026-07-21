@@ -458,3 +458,212 @@ font-size:60px;
 }
 
 }
+
+/* ========================= */
+/* Китайский фон */
+/* ========================= */
+
+body{
+background:
+radial-gradient(circle at 10% 20%, rgba(201,164,75,.08) 0 80px, transparent 81px),
+radial-gradient(circle at 90% 80%, rgba(201,164,75,.08) 0 100px, transparent 101px),
+linear-gradient(#f6efe4,#efe2cc);
+}
+
+/* Китайские облака */
+
+.background::before,
+.background::after{
+
+content:"☁";
+
+position:absolute;
+
+font-size:80px;
+
+color:rgba(201,164,75,.15);
+
+font-family:"Noto Serif SC";
+
+}
+
+.background::before{
+
+left:30px;
+
+top:140px;
+
+}
+
+.background::after{
+
+right:40px;
+
+bottom:120px;
+
+}
+
+/* Пионы */
+
+header::before{
+
+content:"❀";
+
+position:absolute;
+
+left:25px;
+
+top:40px;
+
+font-size:70px;
+
+color:rgba(156,31,31,.15);
+
+}
+
+header::after{
+
+content:"❀";
+
+position:absolute;
+
+right:25px;
+
+top:40px;
+
+font-size:70px;
+
+color:rgba(156,31,31,.15);
+
+}
+
+/* Печать */
+
+.seal{
+
+box-shadow:
+0 0 20px rgba(156,31,31,.15),
+0 0 40px rgba(201,164,75,.2);
+
+}
+
+/* Карточка */
+
+.front,
+.back{
+
+background:
+linear-gradient(rgba(255,255,255,.85),rgba(255,255,255,.85)),
+repeating-linear-gradient(
+0deg,
+transparent,
+transparent 26px,
+rgba(201,164,75,.06) 27px
+);
+
+}
+
+/* Красивый иероглиф */
+
+.word,
+.word-small{
+
+text-shadow:
+
+2px 2px 0 rgba(201,164,75,.25);
+
+}
+
+/* Анимация появления */
+
+.card{
+
+animation:fade .5s;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+/* Кнопки */
+
+button{
+
+transition:.25s;
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 8px 18px rgba(0,0,0,.15);
+
+}
+
+button:active{
+
+transform:scale(.97);
+
+}
+
+/* Фонарики */
+
+body::before{
+
+content:"🏮";
+
+position:fixed;
+
+left:15px;
+
+top:20px;
+
+font-size:54px;
+
+animation:swing 3s infinite ease-in-out;
+
+}
+
+body::after{
+
+content:"🏮";
+
+position:fixed;
+
+right:15px;
+
+top:20px;
+
+font-size:54px;
+
+animation:swing 3s infinite ease-in-out;
+
+}
+
+@keyframes swing{
+
+0%{transform:rotate(4deg);}
+
+50%{transform:rotate(-4deg);}
+
+100%{transform:rotate(4deg);}
+
+}
