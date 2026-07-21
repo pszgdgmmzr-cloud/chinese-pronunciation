@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>HSK Pronunciation</title>
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:Arial,sans-serif;
+background:#f9f2e7;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+overflow:hidden;
+}
+
+/* Золотые облака */
+body::before{
+content:"";
+position:fixed;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 20% 15%,rgba(212,175,55,.18) 0 3px,transparent 4px),
+radial-gradient(circle at 80% 80%,rgba(212,175,55,.18) 0 3px,transparent 4px);
+pointer-events:none;
+}
+
+.container{
+width:390px;
+text-align:center;
+position:relative;
+}
+
+/* Фонарики */
+
+.lantern{
+position:absolute;
+top:-10px;
+width:65px;
+animation:swing 3s ease-in-out infinite;
+}
+
+.left{left:-15px;}
+.right{right:-15px;}
+
+@keyframes swing{
+0%,100%{transform:rotate(4deg);}
+50%{transform:rotate(-4deg);}
+}
+
+.lantern:before{
+content:"";
+display:block;
+width:52px;
+height:60px;
+background:#b71c1c;
+border:3px solid #d4af37;
+border-radius:50%;
+box-shadow:0 0 20px rgba(212,175,55,.4);
+}
+
+.lantern:after{
+content:"";
+display:block;
+width:4px;
+height:40px;
+background:#b71c1c;
+margin:auto;
+}
+
+/* Заголовок */
+
+h1{
+color:#9d1c1c;
+font-size:42px;
+margin:40px 0 20px;
+font-family:Georgia,serif;
+}
+
+/* Выбор */
+
+select{
+
+padding:12px 20px;
+
+border:none;
+
+border-radius:40px;
+
+background:#b71c1c;
+
+color:white;
+
+font-size:18px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
+margin-bottom:25px;
+
+}
+
+/* Карточка */
+
+.card{
+
+background:#fffdf8;
+
+border:2px solid #d4af37;
+
+border-radius:30px;
+
+padding:35px 20px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.word{
+
+font-size:82px;
+
+color:#a11212;
+
+font-weight:bold;
+
+}
+
+.pinyin{
+
+font-size:34px;
+
+margin:20px 0;
+
+color:#b8860b;
+
+}
+
+.translation{
+
+font-size:28px;
+
+color:#5d4037;
+
+}
+
+/* Кнопки */
+
+button{
+
+margin-top:20px;
+
+padding:16px;
+
+width:100%;
+
+border:none;
+
+border-radius:18px;
+
+font-size:22px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.main{
+
+background:#b71c1c;
+
+color:white;
+
+box-shadow:0 8px 18px rgba(183,28,28,.3);
+
+}
+
+.main:hover{
+
+background:#991313;
+
+}
+
+.row{
+
+display:flex;
+
+gap:15px;
+
+margin-top:20px;
+
+}
+
+.row button{
+
+width:100%;
+
+}
+
+.gold{
+
+background:white;
+
+border:2px solid #d4af37;
+
+color:#9d1c1c;
+
+}
+
+.gold:hover{
+
+background:#fff5da;
+
+}
+
+.hidden{
+
+visibility:hidden;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="lantern left"></div>
+
+<div class="lantern right"></div>
+
+<h1>HSK Pronunciation</h1>
+
+<select id="level">
+
+<option value="1">HSK 1</option>
+
+<option value="2">HSK 2</option>
+
+<option value="3">HSK 3</option>
+
+<option value="4">HSK 4</option>
+
+</select>
+
+<div class="card">
+
+<div class="word" id="word"></div>
+
+<div class="pinyin" id="pinyin"></div>
+
+<div class="translation" id="translation"></div>
+
+</div>
+
+<button class="main" onclick="speak()">🔊 Произнести</button>
+
+<div class="row">
+
+<button class="main" onclick="prev()">←</button>
+
+<button class="main" onclick="next()">→</button>
+
+</div>
+
+<div class="row">
+
+<button class="gold" onclick="togglePinyin()">Пиньинь</button>
+
+<button class="gold" onclick="toggleTranslation()">Перевод</button>
+
+</div>
+
+<button class="gold" onclick="shuffle()">🔀 Перемешать</button>
+
+</div>
+
+<script>
+
+const words={
+
+1:[
+
+{c:"你好",p:"nǐ hǎo",r:"Привет"},
+
+{c:"谢谢",p:"xièxie",r:"Спасибо"},
+
+{c:"中国",p:"Zhōngguó",r:"Китай"},
+
+{c:"老师",p:"lǎoshī",r:"Учитель"}
+
+],
+
+2:[
+
+{c:"朋友",p:"péngyou",r:"Друг"},
+
+{c:"医院",p:"yīyuàn",r:"Больница"}
+
+],
+
+3:[
+
+{c:"准备",p:"zhǔnbèi",r:"Готовиться"},
+
+{c:"文化",p:"wénhuà",r:"Культура"}
+
+],
+
+4:[
+
+{c:"经验",p:"jīngyàn",r:"Опыт"},
+
+{c:"成功",p:"chénggōng",r:"Успех"}
+
+]
+
+};
+
+let level=1,index=0,list=words[1];
+
+function show(){
+
+word.textContent=list[index].c;
+
+pinyin.textContent=list[index].p;
+
+translation.textContent=list[index].r;
+
+}
+
+level.onchange=()=>{
+
+level=event.target.value;
+
+list=[...words[level]];
+
+index=0;
+
+show();
+
+}
+
+function next(){
+
+index=(index+1)%list.length;
+
+show();
+
+}
+
+function prev(){
+
+index=(index-1+list.length)%list.length;
+
+show();
+
+}
+
+function speak(){
+
+let u=new SpeechSynthesisUtterance(list[index].c);
+
+u.lang="zh-CN";
+
+u.rate=.8;
+
+speechSynthesis.cancel();
+
+speechSynthesis.speak(u);
+
+}
+
+function shuffle(){
+
+list.sort(()=>Math.random()-.5);
+
+index=0;
+
+show();
+
+}
+
+function togglePinyin(){
+
+pinyin.classList.toggle("hidden");
+
+}
+
+function toggleTranslation(){
+
+translation.classList.toggle("hidden");
+
+}
+
+show();
+
+</script>
+
+</body>
+</html>
