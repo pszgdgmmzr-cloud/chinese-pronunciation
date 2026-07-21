@@ -1,0 +1,143 @@
+const words = {
+1:[
+{cn:"你好",py:"nǐ hǎo",ru:"Привет"},
+{cn:"谢谢",py:"xiè xie",ru:"Спасибо"},
+{cn:"再见",py:"zài jiàn",ru:"До свидания"},
+{cn:"中国",py:"Zhōngguó",ru:"Китай"},
+{cn:"学生",py:"xué sheng",ru:"Студент"}
+],
+
+2:[
+{cn:"朋友",py:"péng you",ru:"Друг"},
+{cn:"工作",py:"gōng zuò",ru:"Работа"},
+{cn:"医院",py:"yī yuàn",ru:"Больница"},
+{cn:"时间",py:"shí jiān",ru:"Время"},
+{cn:"喜欢",py:"xǐ huan",ru:"Нравиться"}
+],
+
+3:[
+{cn:"准备",py:"zhǔn bèi",ru:"Готовиться"},
+{cn:"文化",py:"wén huà",ru:"Культура"},
+{cn:"历史",py:"lì shǐ",ru:"История"},
+{cn:"重要",py:"zhòng yào",ru:"Важный"},
+{cn:"决定",py:"jué dìng",ru:"Решать"}
+],
+
+4:[
+{cn:"经验",py:"jīng yàn",ru:"Опыт"},
+{cn:"成功",py:"chéng gōng",ru:"Успех"},
+{cn:"环境",py:"huán jìng",ru:"Окружающая среда"},
+{cn:"责任",py:"zé rèn",ru:"Ответственность"},
+{cn:"提高",py:"tí gāo",ru:"Повышать"}
+]
+};
+
+let level = 1;
+let index = 0;
+
+const card = document.querySelector(".card");
+const word = document.querySelector(".word");
+const wordSmall = document.querySelector(".word-small");
+const pinyin = document.querySelector(".pinyin");
+const translation = document.querySelector(".translation");
+const levelText = document.querySelector(".level");
+const fill = document.querySelector(".fill");
+const percent = document.querySelector(".percent");
+
+function updateCard(){
+
+let w = words[level][index];
+
+word.textContent = w.cn;
+wordSmall.textContent = w.cn;
+pinyin.textContent = w.py;
+translation.textContent = w.ru;
+
+levelText.textContent = "HSK " + level;
+
+let progress = ((index+1)/words[level].length)*100;
+
+fill.style.width = progress + "%";
+percent.textContent = Math.round(progress) + "%";
+
+card.classList.remove("flip");
+
+}
+
+updateCard();
+
+/* Перевернуть карточку */
+
+card.onclick = ()=>{
+
+card.classList.toggle("flip");
+
+};
+
+/* Следующее */
+
+document.getElementById("next").onclick=()=>{
+
+index++;
+
+if(index>=words[level].length){
+
+index=0;
+
+}
+
+updateCard();
+
+};
+
+/* Предыдущее */
+
+document.getElementById("prev").onclick=()=>{
+
+index--;
+
+if(index<0){
+
+index=words[level].length-1;
+
+}
+
+updateCard();
+
+};
+
+/* Озвучка */
+
+document.getElementById("speak").onclick=()=>{
+
+let utter = new SpeechSynthesisUtterance(words[level][index].cn);
+
+utter.lang="zh-CN";
+
+utter.rate=0.8;
+
+speechSynthesis.cancel();
+
+speechSynthesis.speak(utter);
+
+};
+
+/* Выбор HSK */
+
+document.querySelectorAll(".levels button").forEach((btn,i)=>{
+
+btn.onclick=()=>{
+
+document.querySelector(".levels .active").classList.remove("active");
+
+btn.classList.add("active");
+
+level=i+1;
+
+index=0;
+
+updateCard();
+
+};
+
+});
