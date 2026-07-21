@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HSK Pronunciation Trainer</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#f6f9ff,#dfe9ff);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+width:420px;
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(0,0,0,.15);
+text-align:center;
+}
+
+h1{
+margin-top:0;
+color:#3f51b5;
+}
+
+select{
+padding:10px;
+border-radius:10px;
+font-size:16px;
+margin-bottom:20px;
+}
+
+.word{
+font-size:64px;
+font-weight:bold;
+margin:20px 0;
+}
+
+.pinyin{
+font-size:28px;
+color:#444;
+margin-bottom:10px;
+}
+
+.translation{
+font-size:22px;
+color:#666;
+margin-bottom:20px;
+}
+
+button{
+padding:12px 18px;
+margin:5px;
+border:none;
+border-radius:10px;
+background:#3f51b5;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#283593;
+}
+
+.small{
+background:#8e99f3;
+}
+
+.hidden{
+visibility:hidden;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>HSK Pronunciation</h1>
+
+<select id="level">
+<option value="1">HSK 1</option>
+<option value="2">HSK 2</option>
+<option value="3">HSK 3</option>
+<option value="4">HSK 4</option>
+</select>
+
+<div class="word" id="word"></div>
+<div class="pinyin" id="pinyin"></div>
+<div class="translation" id="translation"></div>
+
+<button onclick="speak()">🔊 Произнести</button>
+
+<br><br>
+
+<button onclick="prevWord()">⬅</button>
+<button onclick="nextWord()">➡</button>
+
+<br><br>
+
+<button class="small" onclick="togglePinyin()">Пиньинь</button>
+<button class="small" onclick="toggleTranslation()">Перевод</button>
+<button class="small" onclick="shuffle()">Перемешать</button>
+
+</div>
+
+<script>
+
+const words={
+
+1:[
+{c:"你好",p:"nǐ hǎo",r:"Привет"},
+{c:"谢谢",p:"xièxie",r:"Спасибо"},
+{c:"再见",p:"zàijiàn",r:"До свидания"},
+{c:"中国",p:"Zhōngguó",r:"Китай"},
+{c:"人",p:"rén",r:"Человек"},
+{c:"水",p:"shuǐ",r:"Вода"},
+{c:"茶",p:"chá",r:"Чай"},
+{c:"学校",p:"xuéxiào",r:"Школа"},
+{c:"老师",p:"lǎoshī",r:"Учитель"},
+{c:"学生",p:"xuésheng",r:"Студент"}
+],
+
+2:[
+{c:"朋友",p:"péngyou",r:"Друг"},
+{c:"医院",p:"yīyuàn",r:"Больница"},
+{c:"飞机",p:"fēijī",r:"Самолёт"},
+{c:"时间",p:"shíjiān",r:"Время"},
+{c:"工作",p:"gōngzuò",r:"Работа"},
+{c:"因为",p:"yīnwèi",r:"Потому что"},
+{c:"帮助",p:"bāngzhù",r:"Помогать"},
+{c:"运动",p:"yùndòng",r:"Спорт"}
+],
+
+3:[
+{c:"重要",p:"zhòngyào",r:"Важный"},
+{c:"决定",p:"juédìng",r:"Решать"},
+{c:"旅行",p:"lǚxíng",r:"Путешествие"},
+{c:"准备",p:"zhǔnbèi",r:"Готовиться"},
+{c:"历史",p:"lìshǐ",r:"История"},
+{c:"文化",p:"wénhuà",r:"Культура"},
+{c:"城市",p:"chéngshì",r:"Город"}
+],
+
+4:[
+{c:"经验",p:"jīngyàn",r:"Опыт"},
+{c:"成功",p:"chénggōng",r:"Успех"},
+{c:"理解",p:"lǐjiě",r:"Понимать"},
+{c:"环境",p:"huánjìng",r:"Окружающая среда"},
+{c:"提高",p:"tígāo",r:"Повышать"},
+{c:"发展",p:"fāzhǎn",r:"Развитие"},
+{c:"责任",p:"zérèn",r:"Ответственность"}
+]
+
+};
+
+let index=0;
+
+let current=words[1];
+
+const word=document.getElementById("word");
+const pinyin=document.getElementById("pinyin");
+const translation=document.getElementById("translation");
+
+function show(){
+word.textContent=current[index].c;
+pinyin.textContent=current[index].p;
+translation.textContent=current[index].r;
+}
+
+document.getElementById("level").onchange=function(){
+current=[...words[this.value]];
+index=0;
+show();
+}
+
+function nextWord(){
+index=(index+1)%current.length;
+show();
+}
+
+function prevWord(){
+index=(index-1+current.length)%current.length;
+show();
+}
+
+function speak(){
+
+let u=new SpeechSynthesisUtterance(current[index].c);
+
+u.lang="zh-CN";
+
+u.rate=0.8;
+
+speechSynthesis.cancel();
+
+speechSynthesis.speak(u);
+
+}
+
+function togglePinyin(){
+pinyin.classList.toggle("hidden");
+}
+
+function toggleTranslation(){
+translation.classList.toggle("hidden");
+}
+
+function shuffle(){
+
+for(let i=current.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[current[i],current[j]]=[current[j],current[i]];
+}
+
+index=0;
+show();
+
+}
+
+show();
+
+</script>
+
+</body>
+</html>
